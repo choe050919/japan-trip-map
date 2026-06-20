@@ -123,7 +123,7 @@
     }
     #search:focus { border-color: #7ea99a; box-shadow: 0 0 0 3px rgba(37,141,115,.12); }
     .filter-label { margin: 14px 0 8px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .08em; }
-    .people { display: flex; flex-wrap: wrap; gap: 7px; }
+    .people { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; }
     .person-chip, .mini-filter {
       border: 1px solid var(--line);
       border-radius: 999px;
@@ -131,7 +131,7 @@
       cursor: pointer;
       transition: .18s ease;
     }
-    .person-chip { display: flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 12px; font-weight: 750; }
+    .person-chip { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 6px; font-size: 12px; font-weight: 750; white-space: nowrap; }
     .person-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--person); }
     .person-chip.active { color: white; border-color: var(--person); background: var(--person); }
     .person-chip.active .dot { background: white; }
@@ -434,6 +434,7 @@
       .legend { bottom: 12px; }
       .place-list { max-height: 620px; overflow: visible; }
       .filters { padding-top: 14px; }
+      .people { grid-template-columns: repeat(auto-fit, minmax(62px, 1fr)); }
     }
   </style>
 </head>
