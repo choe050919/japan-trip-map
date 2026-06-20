@@ -22,6 +22,8 @@
       --yedam: #ee7252;
       --jungwoo: #4779d4;
       --jinseo: #258d73;
+      --hyunseung: #d83a34;
+      --durim: #8a5a3b;
       --shadow: 0 14px 40px rgba(37, 56, 49, .12);
     }
 
@@ -120,7 +122,7 @@
     .stat b { display: block; font-size: 16px; }
     .stat span { color: #c9ddd6; font-size: 10px; }
 
-    .workspace { min-height: 0; display: grid; grid-template-columns: 410px 1fr; }
+    .workspace { min-height: 0; display: grid; grid-template-columns: clamp(460px, 30vw, 520px) minmax(0, 1fr); }
     .sidebar {
       z-index: 500;
       min-height: 0;
@@ -146,7 +148,7 @@
     }
     #search:focus { border-color: #7ea99a; box-shadow: 0 0 0 3px rgba(37,141,115,.12); }
     .filter-label { margin: 14px 0 8px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .08em; }
-    .people { display: flex; flex-wrap: wrap; gap: 7px; }
+    .people { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; }
     .person-chip, .mini-filter {
       border: 1px solid var(--line);
       border-radius: 999px;
@@ -154,7 +156,7 @@
       cursor: pointer;
       transition: .18s ease;
     }
-    .person-chip { display: flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 12px; font-weight: 750; }
+    .person-chip { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 6px; font-size: 12px; font-weight: 750; white-space: nowrap; }
     .person-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--person); }
     .person-chip.active { color: white; border-color: var(--person); background: var(--person); }
     .person-chip.active .dot { background: white; }
@@ -462,6 +464,7 @@
       .legend { bottom: 12px; }
       .place-list { max-height: 620px; overflow: visible; }
       .filters { padding-top: 14px; }
+      .people { grid-template-columns: repeat(auto-fit, minmax(62px, 1fr)); }
     }
   </style>
 </head>
@@ -472,7 +475,7 @@
         <div class="brand-mark" aria-hidden="true">旅</div>
         <div>
           <h1>우리들의 일본 여행 지도</h1>
-          <p>예담 · 정우 · 진서의 가고 싶은 곳을 한 장에</p>
+          <p>예담 · 정우 · 진서 · 현승 · 두림의 가고 싶은 곳을 한 장에</p>
         </div>
       </div>
       <div class="top-actions">
@@ -505,6 +508,8 @@
             <button class="person-chip active" type="button" data-person="예담" style="--person: var(--yedam)"><span class="dot"></span>예담 <span>24</span></button>
             <button class="person-chip active" type="button" data-person="정우" style="--person: var(--jungwoo)"><span class="dot"></span>정우 <span>16</span></button>
             <button class="person-chip active" type="button" data-person="진서" style="--person: var(--jinseo)"><span class="dot"></span>진서 <span>11</span></button>
+            <button class="person-chip active" type="button" data-person="현승" style="--person: var(--hyunseung)"><span class="dot"></span>현승 <span>0</span></button>
+            <button class="person-chip active" type="button" data-person="두림" style="--person: var(--durim)"><span class="dot"></span>두림 <span>0</span></button>
           </div>
 
           <div class="filter-row">
@@ -577,7 +582,9 @@
     const PEOPLE = {
       "예담": { color: "#ee7252" },
       "정우": { color: "#4779d4" },
-      "진서": { color: "#258d73" }
+      "진서": { color: "#258d73" },
+      "현승": { color: "#d83a34" },
+      "두림": { color: "#8a5a3b" }
     };
 
     const CATEGORIES = {

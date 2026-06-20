@@ -6,7 +6,7 @@ const vm = require("vm");
 
 const ROOT = path.resolve(__dirname, "..");
 const PLACES_FILE = path.join(ROOT, "data", "places.js");
-const VALID_PEOPLE = new Set(["예담", "정우", "진서"]);
+const VALID_PEOPLE = new Set(["예담", "정우", "진서", "현승", "두림"]);
 const VALID_CATEGORIES = new Set(["볼거리", "산책", "쇼핑", "맛집", "카페", "체험"]);
 
 function usage() {
@@ -24,7 +24,7 @@ Options:
 
 Examples:
   node scripts/add-place.js --url "https://www.google.com/maps/place/..." --people "예담"
-  node scripts/add-place.js --url "https://maps.app.goo.gl/..." --people "정우,진서" --category "맛집" --city "후쿠오카"
+  node scripts/add-place.js --url "https://maps.app.goo.gl/..." --people "현승,두림" --category "맛집" --city "후쿠오카"
 `.trim());
 }
 
