@@ -83,20 +83,18 @@ function parseMapsUrl(rawUrl) {
 
   const pathname = decodeURIComponent(parsed.pathname);
   const placeMatch = pathname.match(/\/maps\/place\/([^/]+)/);
+  const dataCoordinateMatch = rawUrl.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
   const atMatch = rawUrl.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?),/);
 
-  let coordinates = atMatch ? { lat: Number(atMatch[1]), lng: Number(atMatch[2]) } : null;
+  let coordinates = dataCoordinateMatch
+    ? { lat: Number(dataCoordinateMatch[1]), lng: Number(dataCoordinateMatch[2]) }
+    : atMatch ? { lat: Number(atMatch[1]), lng: Number(atMatch[2]) } : null;
   let name = placeMatch ? decodePathPart(placeMatch[1]) : "";
 
   for (const key of ["q", "query", "destination", "ll"]) {
     const value = parsed.searchParams.get(key);
     if (!coordinates) coordinates = parseCoordinatePair(value);
     if (!name && value && !parseCoordinatePair(value)) name = decodePathPart(value);
-  }
-
-  const dataCoordinateMatch = rawUrl.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
-  if (!coordinates && dataCoordinateMatch) {
-    coordinates = { lat: Number(dataCoordinateMatch[1]), lng: Number(dataCoordinateMatch[2]) };
   }
 
   return { name, coordinates };
