@@ -1,6 +1,7 @@
 /*
  * 여행 후보지 데이터 스키마 v1
  * - 새 후보지는 places 배열에 추가합니다.
+ * - 새 후보지는 Google Sheets에서 관리하고 GitHub Actions로 동기화합니다.
  * - name은 일정 데이터의 item.placeName과 매칭되므로 고유하게 유지합니다.
  * - 필수값: name, city, area, category, people, lat, lng, note
  * - 선택값: aliases, mapUrl
@@ -32,7 +33,6 @@ window.TRIP_PLACES = {
     { name:"야쿠인 거리", city:"후쿠오카", area:"야쿠인", category:"산책", people:["예담"], lat:33.5824351, lng:130.401673, note:"카페와 작은 상점을 따라 걸어볼 후보" },
     { name:"난조인", city:"후쿠오카", area:"근교·사사구리", category:"볼거리", people:["예담"], lat:33.61755, lng:130.57225, note:"대형 청동 와불상이 있는 사찰 · 시내에서 먼 근교" },
     { name:"다자이후 텐만구", city:"후쿠오카", area:"근교·다자이후", category:"볼거리", people:["예담"], lat:33.52134, lng:130.53526, note:"학업 성취를 기원하는 매화 명소 신사" },
-
     { name:"포켓몬센터 후쿠오카", city:"후쿠오카", area:"하카타역·하카타 마루이 2F", category:"쇼핑", people:["정우"], lat:33.5888887, lng:130.4194425, note:"정우 1순위 · 쇼핑·체험 최우선 후보" },
     { name:"TCG 전문점 트레카블루", city:"후쿠오카", area:"카와바타", category:"쇼핑", people:["정우"], lat:33.59522, lng:130.40763, note:"정우 2순위 · 오리파가 가성비 좋은 TCG 숍" },
     { name:"미나텐진", city:"후쿠오카", area:"텐진", category:"쇼핑", people:["정우"], lat:33.5931863, lng:130.3983203, note:"정우 3순위 · 가성비 브랜드 중심 쇼핑몰" },
@@ -44,12 +44,10 @@ window.TRIP_PLACES = {
     { name:"후쿠오카 에비스야 우동", city:"후쿠오카", area:"스미요시", category:"맛집", people:["정우"], lat:33.5861, lng:130.4113, note:"먹고 싶은 곳 3순위 · 현지 평점이 좋은 우동 후보" },
     { name:"후쿠오카 니쿠젠", city:"후쿠오카", area:"아카사카·다이묘", category:"맛집", people:["정우"], lat:33.5894637, lng:130.3907075, note:"먹고 싶은 곳 4순위 · 야키니쿠 무한리필" },
     { name:"원조 하카타 멘타이쥬", city:"후쿠오카", area:"니시나카스", category:"맛집", people:["정우"], lat:33.59093, lng:130.40355, note:"먹고 싶은 곳 5순위 · 명란 덮밥으로 유명한 곳" },
-
     { name:"REC COFFEE 현청동점", aliases:"REC COFFEE Fukuoka Prefecture East Shop", city:"후쿠오카", area:"히가시코엔", category:"카페", people:["진서"], lat:33.6083397, lng:130.4202976, note:"진서가 고른 커피 스폿", mapUrl:"https://maps.app.goo.gl/VfMRnKaCV83R3HST8" },
     { name:"야오키빵", city:"후쿠오카", area:"하코자키", category:"카페", people:["진서"], lat:33.61933, lng:130.4232167, note:"진서가 고른 동네 빵집", mapUrl:"https://maps.app.goo.gl/9b2HQChW1SR689AX7" },
     { name:"하카타 음식문화박물관 하쿠하쿠", city:"후쿠오카", area:"하코자키", category:"체험", people:["진서"], lat:33.6132965, lng:130.433319, note:"하카타의 음식과 문화를 보는 박물관", mapUrl:"https://maps.app.goo.gl/WaLfYKNFsKmudh8P8" },
     { name:"하카타 모츠나베 오오야마 본점", city:"후쿠오카", area:"고후쿠마치", category:"맛집", people:["진서"], lat:33.5966724, lng:130.4097118, note:"진서가 고른 모츠나베 본점", mapUrl:"https://maps.app.goo.gl/6AiaR5CvpxWVudL99" },
-
     { name:"구마모토성", city:"구마모토", area:"주오구", category:"볼거리", people:["진서"], lat:32.8061859, lng:130.7058335, note:"일본 3대 명성 중 하나로 웅장한 석벽이 유명한 성", mapUrl:"https://maps.app.goo.gl/ANMVXhq3kjSGwHnVA" },
     { name:"스이젠지 조주엔", city:"구마모토", area:"스이젠지", category:"산책", people:["진서"], lat:32.7911584, lng:130.7333645, note:"구마모토의 전통 회유식 정원", mapUrl:"https://maps.app.goo.gl/gRGbpoqYxcZRcMDs6" },
     { name:"몽키 D. 루피 동상", city:"구마모토", area:"구마모토현청", category:"볼거리", people:["진서"], lat:32.789011, lng:130.7413031, note:"구마모토현청 앞 원피스 루피 동상", mapUrl:"https://maps.app.goo.gl/5jnVYE46d2wq2hc17" },
