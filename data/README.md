@@ -14,6 +14,7 @@
   startDate: "2026-06-26",
   endDate: "2026-07-01",
   description: "계획 요약",
+  accommodations: [],
   days: [
     {
       id: "고유-day-id",
@@ -28,6 +29,17 @@
   ]
 }
 ```
+
+## 숙소
+
+`accommodations` 배열에 숙박 기간과 좌표를 저장합니다.
+
+- `checkIn`, `checkOut`: `YYYY-MM-DD` 형식
+- `precision`: `exact` 또는 `approximate`
+- `bookingUrl`: 예약 페이지
+- `mapUrl`: 정확한 별도 지도 링크가 있을 때 선택적으로 사용
+
+Airbnb처럼 예약 전에 정확한 주소를 숨기는 숙소는 공개 지도 좌표를 사용하고 `precision: "approximate"`로 표시합니다.
 
 ## 일정 항목
 

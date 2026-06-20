@@ -312,6 +312,7 @@
     .legend-mark { width: 11px; height: 11px; border: 2px solid white; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 1px #b8c7c0; }
     .legend-mark.common { background: var(--orange); box-shadow: 0 0 0 3px rgba(243,111,69,.2); }
     .legend-route { width: 16px; border-top: 3px dashed #4779d4; }
+    .legend-stay { display: grid; width: 16px; height: 16px; place-items: center; border-radius: 5px; color: white; background: #5b3f92; font-size: 9px; }
 
     .custom-pin { background: transparent; border: 0; }
     .pin-body {
@@ -364,6 +365,31 @@
       line-height: 1.5;
     }
     .route-distance-tooltip b { color: var(--green); font-size: 11px; }
+    .stay-div-icon { background: transparent; border: 0; }
+    .stay-pin {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 3px solid white;
+      border-radius: 11px 11px 11px 3px;
+      color: white;
+      background: #5b3f92;
+      box-shadow: 0 6px 15px rgba(42,28,76,.32);
+      font-size: 16px;
+      transform: rotate(-4deg);
+    }
+    .stay-section { margin: 4px 5px 14px; padding: 10px; border: 1px solid #e4dcef; border-radius: 12px; background: #faf7ff; }
+    .stay-section h3 { margin: 0 0 8px; color: #5b3f92; font-size: 11px; }
+    .stay-card { display: grid; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; padding: 8px; border: 0; border-radius: 9px; background: white; text-align: left; cursor: pointer; }
+    .stay-card + .stay-card { margin-top: 6px; }
+    .stay-card:hover, .stay-card.active { box-shadow: 0 5px 15px rgba(66,45,104,.12); }
+    .stay-card-icon { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 8px; color: white; background: #5b3f92; font-size: 13px; }
+    .stay-card-copy { min-width: 0; }
+    .stay-card-copy strong { display: block; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .stay-card-copy span { display: block; margin-top: 3px; color: var(--muted); font-size: 8px; }
+    .precision-badge { padding: 3px 5px; border-radius: 6px; color: #745c25; background: #fff0bd; font-size: 8px; font-weight: 900; }
+    .precision-badge.exact { color: #21644f; background: #dff1e9; }
     .leaflet-popup-content-wrapper { border-radius: 15px; box-shadow: var(--shadow); }
     .leaflet-popup-content { width: 248px !important; margin: 15px 16px 14px; font-family: inherit; }
     .popup-kicker { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; font-weight: 800; }
@@ -500,6 +526,7 @@
         <div class="legend">
           <strong>핀 안내</strong>
           <div class="legend-row"><span class="legend-route"></span>날짜별 방문 순서</div>
+          <div class="legend-row"><span class="legend-stay">⌂</span>숙소</div>
           <div class="legend-row"><span class="legend-mark common"></span>2명 이상 겹치는 픽</div>
           <div class="legend-row"><span class="legend-mark"></span>한 사람의 픽</div>
         </div>
@@ -601,6 +628,7 @@
     const routeLayer = L.layerGroup().addTo(map);
     const markers = new Map();
     const routeMarkers = new Map();
+    const stayMarkers = new Map();
     let locationMarker = null;
 
     function escapeHtml(value) {
@@ -629,6 +657,15 @@
       const plan = selectedPlan();
       if (!plan) return [];
       return state.dayId === "all" ? plan.days : plan.days.filter(day => day.id === state.dayId);
+    }
+
+    function visibleAccommodations() {
+      const plan = selectedPlan();
+      const stays = plan?.accommodations || [];
+      if (state.dayId === "all") return stays;
+      const date = selectedDays()[0]?.date;
+      if (!date) return [];
+      return stays.filter(stay => stay.checkIn <= date && date < stay.checkOut);
     }
 
     function resolveItineraryItem(item) {
@@ -661,6 +698,12 @@
       });
       ITINERARIES.forEach(plan => {
         lines.push("", `■ 일정 계획 · ${plan.name}`, `${plan.startDate} ~ ${plan.endDate}`, plan.description, "");
+        (plan.accommodations || []).forEach(stay => {
+          lines.push(`- 숙소 ${stay.checkIn}~${stay.checkOut} | ${stay.name}`);
+          lines.push(`  ${stay.officialName}`);
+          lines.push(`  위치: ${stay.area}${stay.precision === "approximate" ? " (공개 근사 위치)" : ""}`);
+          lines.push(`  예약: ${stay.bookingUrl}`, "");
+        });
         plan.days.forEach(day => {
           lines.push(`[${day.dayNumber}일차 · ${day.date}] ${day.title}`);
           day.items.forEach(item => {
@@ -781,6 +824,43 @@
       });
     }
 
+    function accommodationPopup(stay) {
+      const approximate = stay.precision === "approximate";
+      const mapHref = stay.mapUrl || `https://www.google.com/maps/search/?api=1&query=${stay.lat},${stay.lng}`;
+      return `
+        <div class="route-popup-time" style="--route-color:#5b3f92">숙소 · ${escapeHtml(stay.checkIn)} → ${escapeHtml(stay.checkOut)}</div>
+        <div class="popup-title">${escapeHtml(stay.name)}</div>
+        <p class="popup-desc">${escapeHtml(stay.officialName)}<br>${escapeHtml(stay.area)}</p>
+        <div class="route-note">${approximate ? "Airbnb가 예약 전 공개한 근사 위치입니다. 정확한 주소는 예약 정보를 확인하세요." : "숙소 공식 주소로 확인한 위치입니다."}</div>
+        <div class="popup-actions"><a href="${stay.bookingUrl}" target="_blank" rel="noopener">예약 페이지</a><a href="${mapHref}" target="_blank" rel="noopener">지도 보기 ↗</a></div>`;
+    }
+
+    function accommodationHtml(stays) {
+      if (!stays.length) return "";
+      return `
+        <section class="stay-section">
+          <h3>⌂ ${state.dayId === "all" ? `전체 숙소 ${stays.length}곳` : "이날의 숙소"}</h3>
+          ${stays.map(stay => `
+            <div class="stay-card" role="button" tabindex="0" data-stay-id="${escapeHtml(stay.id)}">
+              <span class="stay-card-icon">🛏</span>
+              <span class="stay-card-copy"><strong>${escapeHtml(stay.name)}</strong><span>${escapeHtml(stay.checkIn)} → ${escapeHtml(stay.checkOut)} · ${escapeHtml(stay.area)}</span></span>
+              <span class="precision-badge ${stay.precision === "exact" ? "exact" : ""}">${stay.precision === "exact" ? "정확" : "근사"}</span>
+            </div>`).join("")}
+        </section>`;
+    }
+
+    function setActiveStay(stayId) {
+      document.querySelectorAll("[data-stay-id]").forEach(card => card.classList.toggle("active", card.dataset.stayId === stayId));
+    }
+
+    function openStay(stayId) {
+      const marker = stayMarkers.get(stayId);
+      if (!marker) return;
+      map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 15), { duration: .8 });
+      window.setTimeout(() => marker.openPopup(), 500);
+      setActiveStay(stayId);
+    }
+
     function formatStraightDistance(meters) {
       if (meters < 1000) return `${Math.round(meters / 10) * 10} m`;
       return `${(meters / 1000).toFixed(meters < 10000 ? 1 : 0)} km`;
@@ -789,6 +869,7 @@
     function renderRoutes({ fit = false } = {}) {
       routeLayer.clearLayers();
       routeMarkers.clear();
+      stayMarkers.clear();
       const allCoordinates = [];
 
       selectedDays().forEach(day => {
@@ -844,6 +925,23 @@
         }
       });
 
+      visibleAccommodations().forEach(stay => {
+        const latlng = [stay.lat, stay.lng];
+        allCoordinates.push(latlng);
+        const icon = L.divIcon({
+          className: "stay-div-icon",
+          html: `<div class="stay-pin">🛏</div>`,
+          iconSize: [36, 36],
+          iconAnchor: [18, 18],
+          popupAnchor: [0, -15]
+        });
+        const marker = L.marker(latlng, { icon, title: `숙소 · ${stay.name}`, zIndexOffset: 1400 })
+          .bindPopup(accommodationPopup(stay));
+        marker.on("click", () => setActiveStay(stay.id));
+        routeLayer.addLayer(marker);
+        stayMarkers.set(stay.id, marker);
+      });
+
       if (fit && allCoordinates.length) {
         if (allCoordinates.length === 1) map.flyTo(allCoordinates[0], 15, { duration: .8 });
         else map.fitBounds(L.latLngBounds(allCoordinates), { padding: [55, 55], maxZoom: 14 });
@@ -853,7 +951,8 @@
     function itineraryHtml() {
       const days = selectedDays();
       if (!days.length) return `<div class="empty">표시할 일정이 없어요.</div>`;
-      return days.map(day => {
+      const stays = accommodationHtml(visibleAccommodations());
+      return stays + days.map(day => {
         let routeNumber = 0;
         const cards = day.items.map(item => {
           const resolved = resolveItineraryItem(item);
@@ -938,9 +1037,10 @@
       if (state.view === "itinerary" && selectedPlan()) {
         const days = selectedDays();
         const mappedCount = days.flatMap(day => day.items).map(resolveItineraryItem).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng)).length;
+        const stayCount = visibleAccommodations().length;
         list.innerHTML = itineraryHtml();
-        document.getElementById("visibleCount").textContent = mappedCount;
-        document.getElementById("resultSummary").textContent = `${days.length}일 · 방문 핀 ${mappedCount}개`;
+        document.getElementById("visibleCount").textContent = mappedCount + stayCount;
+        document.getElementById("resultSummary").textContent = `${days.length}일 · 방문 ${mappedCount} · 숙소 ${stayCount}`;
         bindTimelineCards();
       } else {
         visible.forEach(place => markerLayer.addLayer(markers.get(place.name)));
@@ -1009,6 +1109,12 @@
         card.addEventListener("click", () => openItineraryItem(card.dataset.itineraryItem));
         card.addEventListener("keydown", event => {
           if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openItineraryItem(card.dataset.itineraryItem); }
+        });
+      });
+      document.querySelectorAll("[data-stay-id]").forEach(card => {
+        card.addEventListener("click", () => openStay(card.dataset.stayId));
+        card.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openStay(card.dataset.stayId); }
         });
       });
     }

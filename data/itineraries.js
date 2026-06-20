@@ -15,6 +15,65 @@ window.TRIP_ITINERARIES = {
       startDate: "2026-06-26",
       endDate: "2026-07-01",
       description: "하카타 전통 문화·베이사이드와 오호리·텐진·나카스를 잇는 2일 계획",
+      accommodations: [
+        {
+          id: "stay-container",
+          name: "컨테이너",
+          officialName: "구이라 빌라 | 2층 | 10인 | 하카타역 13분",
+          checkIn: "2026-06-26",
+          checkOut: "2026-06-28",
+          city: "후쿠오카",
+          area: "하카타구 스미요시 4초메 부근",
+          lat: 33.5837,
+          lng: 130.4144,
+          precision: "approximate",
+          source: "Airbnb 공개 지도 핀",
+          bookingUrl: "https://www.airbnb.co.kr/rooms/1040405678828847285"
+        },
+        {
+          id: "stay-ancient-temple",
+          name: "고대신전",
+          officialName: "Guest House 경 | 구마모토역 근처 고민가 단독 숙소",
+          checkIn: "2026-06-28",
+          checkOut: "2026-06-29",
+          city: "구마모토",
+          area: "니시구 가스가 4초메 부근",
+          lat: 32.7944,
+          lng: 130.6868,
+          precision: "approximate",
+          source: "Airbnb 공개 지도 핀",
+          bookingUrl: "https://www.airbnb.co.kr/rooms/945322721091042067"
+        },
+        {
+          id: "stay-unified-sauna",
+          name: "단일화 사우나",
+          officialName: "FAV LUX NAGASAKI",
+          checkIn: "2026-06-29",
+          checkOut: "2026-06-30",
+          city: "나가사키",
+          area: "마쓰가에마치 3-10",
+          lat: 32.7355697,
+          lng: 129.8681482,
+          precision: "exact",
+          source: "숙소 공식 주소",
+          bookingUrl: "https://www.agoda.com/ko-kr/fav-hotel/hotel/nagasaki-jp.html",
+          mapUrl: "https://maps.app.goo.gl/gY9rfJCRZCuQqrD17"
+        },
+        {
+          id: "stay-dream-attic",
+          name: "꿈꾸는 다락방",
+          officialName: "SGK/B | 가족 이용에 적합한 하카타 아파트",
+          checkIn: "2026-06-30",
+          checkOut: "2026-07-01",
+          city: "후쿠오카",
+          area: "하카타구 미노시마 2초메 부근",
+          lat: 33.57844,
+          lng: 130.41652,
+          precision: "approximate",
+          source: "Airbnb 공개 지도 핀",
+          bookingUrl: "https://www.airbnb.co.kr/rooms/1544013395030959231"
+        }
+      ],
       days: [
         {
           id: "gemini-1-day-1",
