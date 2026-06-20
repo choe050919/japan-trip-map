@@ -480,7 +480,7 @@
         </div>
       </div>
       <div class="top-actions">
-        <button class="copy-all-button" id="copyAllButton" type="button" title="46곳의 모든 정보를 복사">
+        <button class="copy-all-button" id="copyAllButton" type="button" title="">
           <span class="copy-icon" aria-hidden="true">⧉</span><span class="copy-label">전체 정보 복사</span>
         </button>
         <div class="copy-menu-wrap" id="copyMenuWrap">
@@ -490,7 +490,7 @@
           <div class="copy-dropdown" id="copyDropdown" role="menu" hidden></div>
         </div>
         <div class="top-stats" aria-label="여행지 요약">
-          <div class="stat"><b id="visibleCount">46</b><span>보이는 장소</span></div>
+          <div class="stat"><b id="visibleCount"></b><span>보이는 장소</span></div>
           <div class="stat"><b id="savedCount">0</b><span>일정에 담음</span></div>
         </div>
       </div>
@@ -505,13 +505,7 @@
           </div>
 
           <div class="filter-label">누구의 픽?</div>
-          <div class="people" id="peopleFilters">
-            <button class="person-chip active" type="button" data-person="예담" style="--person: var(--yedam)"><span class="dot"></span>예담 <span>24</span></button>
-            <button class="person-chip active" type="button" data-person="정우" style="--person: var(--jungwoo)"><span class="dot"></span>정우 <span>16</span></button>
-            <button class="person-chip active" type="button" data-person="진서" style="--person: var(--jinseo)"><span class="dot"></span>진서 <span>13</span></button>
-            <button class="person-chip active" type="button" data-person="현승" style="--person: var(--hyunseung)"><span class="dot"></span>현승 <span>0</span></button>
-            <button class="person-chip active" type="button" data-person="두림" style="--person: var(--durim)"><span class="dot"></span>두림 <span>0</span></button>
-          </div>
+          <div class="people" id="peopleFilters"></div>
 
           <div class="filter-row">
             <label class="select-wrap">
@@ -554,7 +548,7 @@
             <button class="view-tab" type="button" data-view="candidates">후보지</button>
             <button class="view-tab active" type="button" data-view="itinerary">일정</button>
           </div>
-          <span id="resultSummary">43곳 · 겹치는 픽 우선</span>
+          <span id="resultSummary"></span>
         </div>
         <div class="place-list" id="placeList"></div>
       </aside>
@@ -1227,15 +1221,7 @@
         updateView({ fit: true });
       });
     });
-    document.querySelectorAll("[data-person]").forEach(button => {
-      button.addEventListener("click", () => {
-        const person = button.dataset.person;
-        if (state.people.has(person) && state.people.size > 1) state.people.delete(person);
-        else state.people.add(person);
-        button.classList.toggle("active", state.people.has(person));
-        updateView({ fit: true });
-      });
-    });
+    renderPeopleFilters();
     document.getElementById("cityFilter").addEventListener("change", event => { state.city = event.target.value; updateView({ fit: true }); });
     document.getElementById("categoryFilter").addEventListener("change", event => { state.category = event.target.value; updateView({ fit: true }); });
     document.getElementById("search").addEventListener("input", event => { state.query = event.target.value; updateView(); });
@@ -1263,6 +1249,24 @@
       }, () => alert("위치 권한을 허용하면 현재 위치를 지도에 표시할 수 있어요."), { enableHighAccuracy: true, timeout: 9000 });
     });
 
+    function renderPeopleFilters() {
+      const container = document.getElementById("peopleFilters");
+      container.innerHTML = Object.keys(PEOPLE).map(person => {
+        const count = PLACES.filter(place => place.people.includes(person)).length;
+        return `<button class="person-chip ${state.people.has(person) ? "active" : ""}" type="button" data-person="${escapeHtml(person)}" style="--person:${PEOPLE[person].color}"><span class="dot"></span>${escapeHtml(person)} <span>${count}</span></button>`;
+      }).join("");
+      container.querySelectorAll("[data-person]").forEach(button => {
+        button.addEventListener("click", () => {
+          const person = button.dataset.person;
+          if (state.people.has(person) && state.people.size > 1) state.people.delete(person);
+          else state.people.add(person);
+          button.classList.toggle("active", state.people.has(person));
+          updateView({ fit: true });
+        });
+      });
+    }
+
+    document.getElementById("copyAllButton").title = `${PLACES.length}곳의 모든 정보를 복사`;
     renderCopyMenu();
     renderPlanControls();
     renderRoutes({ fit: true });
