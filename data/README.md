@@ -28,6 +28,54 @@ node scripts/add-place.js \
 - 짧은 `maps.app.goo.gl` 링크는 실행 환경에서 네트워크가 가능하면 원본 구글맵 URL로 따라가 좌표와 이름을 추출합니다.
 - 저장 전에 결과만 확인하려면 `--dry-run`을 붙입니다.
 
+## Google Sheets 동기화
+
+여러 사람이 장소를 추가할 때는 Google Sheets를 원본으로 두고 GitHub Actions가 `data/places.js`를 자동 생성합니다.
+
+### 1. 시트 컬럼 만들기
+
+첫 행에 아래 컬럼명을 넣습니다.
+
+```text
+name | googleMapUrl | city | area | category | people | note | lat | lng | aliases | enabled
+```
+
+- `name`: 장소명. 비워두면 구글맵 URL에서 읽을 수 있을 때 자동 추출합니다.
+- `googleMapUrl`: 구글맵 공유 주소. `maps.app.goo.gl` 짧은 주소도 시도합니다.
+- `city`: 예: `후쿠오카`, `구마모토`, `나가사키`
+- `area`: 예: `텐진`
+- `category`: `볼거리`, `산책`, `쇼핑`, `맛집`, `카페`, `체험` 중 하나
+- `people`: `예담`, `정우`, `진서`, `현승`, `두림` 중 쉼표로 입력
+- `note`: 지도 카드와 복사 텍스트에 표시할 메모
+- `lat`, `lng`: 좌표. 구글맵 URL에서 좌표 추출이 안 될 때 필수입니다.
+- `aliases`: 검색용 별칭. 선택값입니다.
+- `enabled`: `false`, `no`, `0`, `숨김`이면 동기화에서 제외합니다.
+
+### 2. CSV URL 만들기
+
+Google Sheets에서 `파일 > 공유 > 웹에 게시`를 선택하고, 게시 형식을 `쉼표로 구분된 값(.csv)`로 설정합니다.
+
+생성된 CSV URL을 GitHub 저장소의 `Settings > Secrets and variables > Actions > New repository secret`에 등록합니다.
+
+```text
+Name: GOOGLE_SHEET_CSV_URL
+Secret: 게시된 Google Sheets CSV URL
+```
+
+### 3. GitHub Actions 실행
+
+`.github/workflows/sync-places.yml`이 30분마다 자동 실행됩니다. 바로 반영하려면 GitHub의 `Actions > Sync places from Google Sheets > Run workflow`를 누릅니다.
+
+동작 순서:
+
+```text
+Google Sheets CSV
+  -> scripts/sync-places-from-sheet.js
+  -> data/places.js 자동 생성
+  -> GitHub Actions가 변경분 커밋
+  -> GitHub Pages에서 trip-map.html이 갱신된 places.js 사용
+```
+
 ## 계획 추가
 
 `plans` 배열에 다음 구조의 객체를 추가합니다.
