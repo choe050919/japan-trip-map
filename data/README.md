@@ -2,6 +2,32 @@
 
 `itineraries.js`는 지도에 표시할 계획을 보관합니다. 브라우저에서 로컬 파일로 열어도 동작하도록 JSON과 동일한 객체를 `window.TRIP_ITINERARIES`에 할당합니다.
 
+## 후보지 자동 추가
+
+구글맵 주소와 사람 이름만 넣어 `places.js`를 업데이트할 수 있습니다.
+
+```bash
+node scripts/add-place.js --url "구글맵 주소" --people "예담,정우"
+```
+
+선택값도 함께 넣을 수 있습니다.
+
+```bash
+node scripts/add-place.js \
+  --url "https://www.google.com/maps/place/..." \
+  --people "진서" \
+  --city "후쿠오카" \
+  --area "텐진" \
+  --category "맛집" \
+  --note "가보고 싶은 후보"
+```
+
+- `people`: `예담`, `정우`, `진서` 중 쉼표로 입력
+- `category`: `볼거리`, `산책`, `쇼핑`, `맛집`, `카페`, `체험` 중 하나
+- 같은 `name` 또는 같은 `mapUrl`이 이미 있으면 새 항목을 만들지 않고 `people`을 합쳐 업데이트합니다.
+- 짧은 `maps.app.goo.gl` 링크는 실행 환경에서 네트워크가 가능하면 원본 구글맵 URL로 따라가 좌표와 이름을 추출합니다.
+- 저장 전에 결과만 확인하려면 `--dry-run`을 붙입니다.
+
 ## 계획 추가
 
 `plans` 배열에 다음 구조의 객체를 추가합니다.
