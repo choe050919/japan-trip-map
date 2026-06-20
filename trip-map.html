@@ -100,12 +100,13 @@
       z-index: 500;
       min-height: 0;
       display: grid;
-      grid-template-rows: auto auto 1fr;
+      grid-template-rows: auto auto auto 1fr;
       border-right: 1px solid var(--line);
       background: var(--surface);
       box-shadow: 8px 0 26px rgba(35, 51, 45, .06);
     }
     .filters { padding: 17px 18px 12px; border-bottom: 1px solid var(--line); }
+    body.itinerary-mode .filters { display: none; }
     .search-wrap { position: relative; }
     .search-wrap span { position: absolute; top: 11px; left: 13px; font-size: 16px; }
     #search {
@@ -152,9 +153,41 @@
     .mini-filter { flex: 1; padding: 8px 6px; color: var(--muted); font-size: 11px; font-weight: 800; }
     .mini-filter.active { color: var(--green); border-color: #92b8a8; background: var(--green-soft); }
 
+    .itinerary-toolbar { padding: 13px 18px 12px; border-bottom: 1px solid var(--line); background: #fbf7ef; }
+    .plan-title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .plan-title-row label { color: var(--green); font-size: 11px; font-weight: 900; letter-spacing: .04em; }
+    .plan-select {
+      min-width: 150px;
+      height: 31px;
+      padding: 0 26px 0 9px;
+      border: 1px solid #d8d2c6;
+      border-radius: 9px;
+      color: var(--ink);
+      background: white;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .day-tabs { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
+    .day-tabs::-webkit-scrollbar { display: none; }
+    .day-tab {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border: 1px solid #ddd6ca;
+      border-radius: 9px;
+      color: var(--muted);
+      background: white;
+      font-size: 10px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+    .day-tab.active { color: white; border-color: var(--day-color, var(--green)); background: var(--day-color, var(--green)); }
+    .plan-caption { margin-top: 8px; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 1.4; text-overflow: ellipsis; white-space: nowrap; }
+
     .list-heading { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px 8px; }
-    .list-heading h2 { margin: 0; font-size: 14px; }
     .list-heading span { color: var(--muted); font-size: 11px; }
+    .view-tabs { display: flex; gap: 4px; padding: 3px; border-radius: 9px; background: #eee9df; }
+    .view-tab { padding: 5px 9px; border: 0; border-radius: 7px; color: var(--muted); background: transparent; font-size: 10px; font-weight: 900; cursor: pointer; }
+    .view-tab.active { color: var(--green); background: white; box-shadow: 0 2px 6px rgba(24,49,43,.09); }
     .place-list { min-height: 0; overflow: auto; padding: 0 11px 22px; scrollbar-width: thin; scrollbar-color: #c9d3ce transparent; }
     .place-card {
       width: 100%;
@@ -203,6 +236,49 @@
     .save-btn.saved { color: var(--orange); }
     .empty { padding: 40px 24px; color: var(--muted); text-align: center; font-size: 13px; line-height: 1.7; }
 
+    .timeline-day { margin: 4px 5px 14px; }
+    .timeline-day-head { padding: 10px 10px 9px; border-left: 4px solid var(--day-color); border-radius: 10px; background: #f7f3eb; }
+    .timeline-day-head strong { display: block; font-size: 12px; line-height: 1.4; }
+    .timeline-day-head span { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .timeline-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 53px 27px 1fr;
+      gap: 7px;
+      min-height: 66px;
+      padding: 9px 8px 8px 5px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      text-align: left;
+    }
+    .timeline-card.mapped { cursor: pointer; }
+    .timeline-card.mapped:hover, .timeline-card.active { background: white; box-shadow: 0 6px 18px rgba(37,56,49,.08); }
+    .timeline-time { padding-top: 3px; color: var(--muted); font-size: 9px; font-weight: 800; line-height: 1.35; text-align: right; }
+    .timeline-rail { position: relative; display: flex; justify-content: center; }
+    .timeline-rail::after { content: ""; position: absolute; top: 26px; bottom: -15px; width: 2px; background: #ddd8ce; }
+    .timeline-card:last-child .timeline-rail::after { display: none; }
+    .timeline-node {
+      z-index: 1;
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      border: 2px solid white;
+      border-radius: 50%;
+      color: white;
+      background: var(--day-color);
+      box-shadow: 0 0 0 1px var(--day-color);
+      font-size: 9px;
+      font-weight: 900;
+    }
+    .timeline-node.secondary { color: var(--muted); border-color: #f8f4ec; background: #e8e3d9; box-shadow: 0 0 0 1px #d8d2c6; font-size: 11px; }
+    .timeline-copy { min-width: 0; }
+    .timeline-copy strong { display: block; overflow: hidden; font-size: 11px; line-height: 1.4; text-overflow: ellipsis; white-space: nowrap; }
+    .timeline-copy p { margin: 3px 0 0; color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .timeline-transit { color: #4779a4 !important; }
+    .timeline-tips { margin: 4px 10px 0; padding: 9px 10px; border-radius: 9px; color: #745c25; background: #fff5d9; font-size: 9px; line-height: 1.5; }
+
     .map-wrap { position: relative; min-width: 0; min-height: 0; background: #dfe9e3; }
     #map { position: absolute; inset: 0; }
     .map-tools { position: absolute; z-index: 450; top: 14px; right: 14px; display: flex; flex-direction: column; gap: 8px; }
@@ -235,6 +311,7 @@
     .legend-row + .legend-row { margin-top: 5px; }
     .legend-mark { width: 11px; height: 11px; border: 2px solid white; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 1px #b8c7c0; }
     .legend-mark.common { background: var(--orange); box-shadow: 0 0 0 3px rgba(243,111,69,.2); }
+    .legend-route { width: 16px; border-top: 3px dashed #4779d4; }
 
     .custom-pin { background: transparent; border: 0; }
     .pin-body {
@@ -259,6 +336,22 @@
       border: 2px solid var(--orange);
       border-radius: 50% 50% 50% 10px;
     }
+    .route-div-icon { background: transparent; border: 0; }
+    .route-pin {
+      display: grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      border: 3px solid white;
+      border-radius: 50%;
+      color: white;
+      background: var(--route-color);
+      box-shadow: 0 5px 13px rgba(24,49,43,.32);
+      font-size: 11px;
+      font-weight: 950;
+    }
+    .route-popup-time { color: var(--route-color); font-size: 10px; font-weight: 900; }
+    .route-note { margin-top: 6px; padding: 7px 8px; border-radius: 8px; color: #536862; background: #f2f5f3; font-size: 9px; line-height: 1.45; }
     .leaflet-popup-content-wrapper { border-radius: 15px; box-shadow: var(--shadow); }
     .leaflet-popup-content { width: 248px !important; margin: 15px 16px 14px; font-family: inherit; }
     .popup-kicker { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; font-weight: 800; }
@@ -367,8 +460,20 @@
           </div>
         </section>
 
+        <section class="itinerary-toolbar" aria-label="여행 계획 선택">
+          <div class="plan-title-row">
+            <label for="planSelect">🧭 동선 계획</label>
+            <select class="plan-select" id="planSelect" aria-label="계획 선택"></select>
+          </div>
+          <div class="day-tabs" id="dayTabs"></div>
+          <div class="plan-caption" id="planCaption"></div>
+        </section>
+
         <div class="list-heading">
-          <h2>여행지 목록</h2>
+          <div class="view-tabs" aria-label="목록 보기 방식">
+            <button class="view-tab" type="button" data-view="candidates">후보지</button>
+            <button class="view-tab active" type="button" data-view="itinerary">일정</button>
+          </div>
           <span id="resultSummary">43곳 · 겹치는 픽 우선</span>
         </div>
         <div class="place-list" id="placeList"></div>
@@ -382,6 +487,7 @@
         </div>
         <div class="legend">
           <strong>핀 안내</strong>
+          <div class="legend-row"><span class="legend-route"></span>날짜별 방문 순서</div>
           <div class="legend-row"><span class="legend-mark common"></span>2명 이상 겹치는 픽</div>
           <div class="legend-row"><span class="legend-mark"></span>한 사람의 픽</div>
         </div>
@@ -389,6 +495,7 @@
     </main>
   </div>
 
+  <script src="./data/itineraries.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const PEOPLE = {
@@ -455,6 +562,8 @@
       { name:"야키토리 데지마", aliases:"やきとり出島", city:"나가사키", area:"데지마", category:"맛집", people:["진서"], lat:32.8175706, lng:129.8451707, note:"진서가 고른 나가사키 야키토리집", mapUrl:"https://maps.app.goo.gl/McWCGiwKjsFE1bJZA" }
     ];
 
+    const ITINERARIES = window.TRIP_ITINERARIES?.plans || [];
+
     const state = {
       people: new Set(Object.keys(PEOPLE)),
       city: "all",
@@ -462,6 +571,9 @@
       query: "",
       commonOnly: false,
       savedOnly: false,
+      view: ITINERARIES.length ? "itinerary" : "candidates",
+      planId: ITINERARIES[0]?.id || null,
+      dayId: "all",
       saved: new Set(JSON.parse(localStorage.getItem("japan-trip-saved") || "[]"))
     };
 
@@ -474,7 +586,9 @@
     }).addTo(map);
 
     const markerLayer = L.layerGroup().addTo(map);
+    const routeLayer = L.layerGroup().addTo(map);
     const markers = new Map();
+    const routeMarkers = new Map();
     let locationMarker = null;
 
     function escapeHtml(value) {
@@ -495,6 +609,30 @@
       return `https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lng}`;
     }
 
+    function selectedPlan() {
+      return ITINERARIES.find(plan => plan.id === state.planId) || ITINERARIES[0] || null;
+    }
+
+    function selectedDays() {
+      const plan = selectedPlan();
+      if (!plan) return [];
+      return state.dayId === "all" ? plan.days : plan.days.filter(day => day.id === state.dayId);
+    }
+
+    function resolveItineraryItem(item) {
+      const place = item.placeName ? PLACES.find(candidate => candidate.name === item.placeName) : null;
+      return {
+        ...item,
+        place,
+        lat: item.lat ?? place?.lat ?? null,
+        lng: item.lng ?? place?.lng ?? null
+      };
+    }
+
+    function formatPlanDate(date) {
+      return new Intl.DateTimeFormat("ko-KR", { month: "numeric", day: "numeric", weekday: "short" }).format(new Date(`${date}T12:00:00`));
+    }
+
     function allPlacesText() {
       const lines = ["우리들의 일본 여행 지도", `총 ${PLACES.length}곳`, ""];
       [...new Set(PLACES.map(place => place.city))].forEach(city => {
@@ -506,6 +644,19 @@
           lines.push(`   태그: ${place.people.join(", ")}`);
           lines.push(`   메모: ${place.note}`);
           lines.push(`   지도: ${searchUrl(place)}`);
+          lines.push("");
+        });
+      });
+      ITINERARIES.forEach(plan => {
+        lines.push("", `■ 일정 계획 · ${plan.name}`, `${plan.startDate} ~ ${plan.endDate}`, plan.description, "");
+        plan.days.forEach(day => {
+          lines.push(`[${day.dayNumber}일차 · ${day.date}] ${day.title}`);
+          day.items.forEach(item => {
+            const time = item.start ? `${item.start}${item.end ? `~${item.end}` : ""}` : "시간 미정";
+            lines.push(`- ${time} | ${item.title}`);
+            if (item.details) lines.push(`  ${item.details}`);
+            if (item.transit) lines.push(`  이동: ${item.transit}`);
+          });
           lines.push("");
         });
       });
@@ -533,7 +684,7 @@
         if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
         else fallbackCopy(text);
         button.classList.add("copied");
-        label.textContent = "43곳 복사 완료";
+        label.textContent = "전체 복사 완료";
         window.setTimeout(() => {
           button.classList.remove("copied");
           label.textContent = "전체 정보 복사";
@@ -574,6 +725,141 @@
       markers.set(place.name, marker);
     });
 
+    function itineraryPopup(item, day, routeNumber) {
+      const resolved = resolveItineraryItem(item);
+      const tags = resolved.place ? `<div class="popup-tags">${personTags(resolved.place.people)}</div>` : "";
+      const mapHref = resolved.place
+        ? searchUrl(resolved.place)
+        : `https://www.google.com/maps/search/?api=1&query=${resolved.lat},${resolved.lng}`;
+      return `
+        <div class="route-popup-time" style="--route-color:${day.color}">${escapeHtml(item.start || "시간 미정")}${item.end ? `–${escapeHtml(item.end)}` : ""} · ${day.dayNumber}일차 #${routeNumber}</div>
+        <div class="popup-title">${escapeHtml(item.title)}</div>
+        <p class="popup-desc">${escapeHtml(item.details || "")}</p>
+        ${item.transit ? `<div class="route-note">이동 · ${escapeHtml(item.transit)}</div>` : ""}
+        ${tags}
+        <div class="popup-actions"><a href="${mapHref}" target="_blank" rel="noopener">Google 지도</a><a href="https://www.google.com/maps/dir/?api=1&destination=${resolved.lat},${resolved.lng}" target="_blank" rel="noopener">길찾기 ↗</a></div>`;
+    }
+
+    function renderPlanControls() {
+      const select = document.getElementById("planSelect");
+      const plan = selectedPlan();
+      select.innerHTML = ITINERARIES.length
+        ? ITINERARIES.map(item => `<option value="${escapeHtml(item.id)}" ${item.id === plan?.id ? "selected" : ""}>${escapeHtml(item.name)}</option>`).join("")
+        : `<option>등록된 계획 없음</option>`;
+      select.disabled = !ITINERARIES.length;
+
+      const tabs = document.getElementById("dayTabs");
+      if (!plan) {
+        tabs.innerHTML = "";
+        document.getElementById("planCaption").textContent = "data/itineraries.js에 계획을 추가할 수 있습니다.";
+        return;
+      }
+      tabs.innerHTML = [
+        `<button class="day-tab ${state.dayId === "all" ? "active" : ""}" type="button" data-day="all" style="--day-color:var(--green)">전체 동선</button>`,
+        ...plan.days.map(day => `<button class="day-tab ${state.dayId === day.id ? "active" : ""}" type="button" data-day="${escapeHtml(day.id)}" style="--day-color:${day.color}">${day.dayNumber}일차 · ${escapeHtml(formatPlanDate(day.date))}</button>`)
+      ].join("");
+      document.getElementById("planCaption").textContent = `${plan.startDate} ~ ${plan.endDate} · ${plan.description}`;
+      document.querySelectorAll("[data-day]").forEach(button => {
+        button.addEventListener("click", () => {
+          state.dayId = button.dataset.day;
+          renderPlanControls();
+          renderRoutes({ fit: true });
+          updateView();
+        });
+      });
+    }
+
+    function renderRoutes({ fit = false } = {}) {
+      routeLayer.clearLayers();
+      routeMarkers.clear();
+      const allCoordinates = [];
+
+      selectedDays().forEach(day => {
+        const dayCoordinates = [];
+        let routeNumber = 0;
+        day.items.forEach(item => {
+          const resolved = resolveItineraryItem(item);
+          if (!Number.isFinite(resolved.lat) || !Number.isFinite(resolved.lng)) return;
+          routeNumber += 1;
+          const latlng = [resolved.lat, resolved.lng];
+          dayCoordinates.push(latlng);
+          allCoordinates.push(latlng);
+          const icon = L.divIcon({
+            className: "route-div-icon",
+            html: `<div class="route-pin" style="--route-color:${day.color}">${routeNumber}</div>`,
+            iconSize: [31, 31],
+            iconAnchor: [15, 15],
+            popupAnchor: [0, -13]
+          });
+          const marker = L.marker(latlng, { icon, title: `${routeNumber}. ${item.title}`, zIndexOffset: 1200 })
+            .bindPopup(itineraryPopup(item, day, routeNumber));
+          marker.on("click", () => setActiveTimeline(item.id));
+          routeLayer.addLayer(marker);
+          routeMarkers.set(item.id, marker);
+        });
+        if (dayCoordinates.length > 1) {
+          routeLayer.addLayer(L.polyline(dayCoordinates, {
+            color: day.color,
+            weight: 4,
+            opacity: .82,
+            dashArray: "9 9",
+            lineCap: "round",
+            lineJoin: "round"
+          }).bindTooltip(`${day.dayNumber}일차 이동 순서 안내선 · 실제 도로 경로 아님`, { sticky: true }));
+        }
+      });
+
+      if (fit && allCoordinates.length) {
+        if (allCoordinates.length === 1) map.flyTo(allCoordinates[0], 15, { duration: .8 });
+        else map.fitBounds(L.latLngBounds(allCoordinates), { padding: [55, 55], maxZoom: 14 });
+      }
+    }
+
+    function itineraryHtml() {
+      const days = selectedDays();
+      if (!days.length) return `<div class="empty">표시할 일정이 없어요.</div>`;
+      return days.map(day => {
+        let routeNumber = 0;
+        const cards = day.items.map(item => {
+          const resolved = resolveItineraryItem(item);
+          const mapped = Number.isFinite(resolved.lat) && Number.isFinite(resolved.lng);
+          const number = mapped ? ++routeNumber : null;
+          const secondaryIcon = item.kind === "meal" ? "🍽" : item.kind === "transfer" ? "→" : "•";
+          const time = item.start ? `${escapeHtml(item.start)}${item.end ? `<br>– ${escapeHtml(item.end)}` : ""}` : "미정";
+          return `
+            <div class="timeline-card ${mapped ? "mapped" : ""}" data-itinerary-item="${escapeHtml(item.id)}" style="--day-color:${day.color}" ${mapped ? 'role="button" tabindex="0"' : ""}>
+              <div class="timeline-time">${time}</div>
+              <div class="timeline-rail"><span class="timeline-node ${mapped ? "" : "secondary"}">${mapped ? number : secondaryIcon}</span></div>
+              <div class="timeline-copy">
+                <strong>${escapeHtml(item.title)}</strong>
+                ${item.details ? `<p>${escapeHtml(item.details)}</p>` : ""}
+                ${item.transit ? `<p class="timeline-transit">이동 · ${escapeHtml(item.transit)}</p>` : ""}
+              </div>
+            </div>`;
+        }).join("");
+        const tips = day.tips?.length ? `<div class="timeline-tips">💡 ${day.tips.map(escapeHtml).join("<br>")}</div>` : "";
+        return `
+          <section class="timeline-day" style="--day-color:${day.color}">
+            <div class="timeline-day-head"><strong>${day.dayNumber}일차 · ${escapeHtml(formatPlanDate(day.date))} · ${escapeHtml(day.title)}</strong><span>${escapeHtml(day.summary)}</span></div>
+            ${cards}${tips}
+          </section>`;
+      }).join("");
+    }
+
+    function setActiveTimeline(itemId) {
+      document.querySelectorAll("[data-itinerary-item]").forEach(card => card.classList.toggle("active", card.dataset.itineraryItem === itemId));
+      const card = document.querySelector(`[data-itinerary-item="${CSS.escape(itemId)}"]`);
+      if (card && window.innerWidth > 800) card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+
+    function openItineraryItem(itemId) {
+      const marker = routeMarkers.get(itemId);
+      if (!marker) return;
+      map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 15), { duration: .8 });
+      window.setTimeout(() => marker.openPopup(), 500);
+      setActiveTimeline(itemId);
+    }
+
     function filteredPlaces() {
       const normalizedQuery = state.query.trim().toLocaleLowerCase("ko");
       return PLACES.filter(place => {
@@ -609,17 +895,31 @@
     function updateView({ fit = false } = {}) {
       const visible = filteredPlaces();
       markerLayer.clearLayers();
-      visible.forEach(place => markerLayer.addLayer(markers.get(place.name)));
-
       const list = document.getElementById("placeList");
-      list.innerHTML = visible.length ? visible.map(placeCard).join("") : `<div class="empty">조건에 맞는 장소가 없어요.<br>필터를 하나 풀어보세요.</div>`;
-      document.getElementById("visibleCount").textContent = visible.length;
+      document.body.classList.toggle("itinerary-mode", state.view === "itinerary");
       document.getElementById("savedCount").textContent = state.saved.size;
-      const commonCount = visible.filter(place => place.people.length > 1).length;
-      document.getElementById("resultSummary").textContent = `${visible.length}곳 · 겹치는 픽 ${commonCount}곳`;
-      bindCards();
+      document.querySelectorAll("[data-view]").forEach(button => button.classList.toggle("active", button.dataset.view === state.view));
 
-      if (fit && visible.length) fitVisible(visible);
+      if (state.view === "itinerary" && selectedPlan()) {
+        const days = selectedDays();
+        const mappedCount = days.flatMap(day => day.items).map(resolveItineraryItem).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng)).length;
+        list.innerHTML = itineraryHtml();
+        document.getElementById("visibleCount").textContent = mappedCount;
+        document.getElementById("resultSummary").textContent = `${days.length}일 · 방문 핀 ${mappedCount}개`;
+        bindTimelineCards();
+      } else {
+        visible.forEach(place => markerLayer.addLayer(markers.get(place.name)));
+        list.innerHTML = visible.length ? visible.map(placeCard).join("") : `<div class="empty">조건에 맞는 장소가 없어요.<br>필터를 하나 풀어보세요.</div>`;
+        document.getElementById("visibleCount").textContent = visible.length;
+        const commonCount = visible.filter(place => place.people.length > 1).length;
+        document.getElementById("resultSummary").textContent = `${visible.length}곳 · 겹치는 픽 ${commonCount}곳`;
+        bindCards();
+      }
+
+      if (fit) {
+        if (state.view === "itinerary") renderRoutes({ fit: true });
+        else if (visible.length) fitVisible(visible);
+      }
     }
 
     function fitVisible(places = filteredPlaces()) {
@@ -669,6 +969,29 @@
       });
     }
 
+    function bindTimelineCards() {
+      document.querySelectorAll(".timeline-card.mapped").forEach(card => {
+        card.addEventListener("click", () => openItineraryItem(card.dataset.itineraryItem));
+        card.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openItineraryItem(card.dataset.itineraryItem); }
+        });
+      });
+    }
+
+    document.getElementById("planSelect").addEventListener("change", event => {
+      state.planId = event.target.value;
+      state.dayId = "all";
+      state.view = "itinerary";
+      renderPlanControls();
+      renderRoutes({ fit: true });
+      updateView();
+    });
+    document.querySelectorAll("[data-view]").forEach(button => {
+      button.addEventListener("click", () => {
+        state.view = button.dataset.view;
+        updateView({ fit: true });
+      });
+    });
     document.querySelectorAll("[data-person]").forEach(button => {
       button.addEventListener("click", () => {
         const person = button.dataset.person;
@@ -683,7 +1006,7 @@
     document.getElementById("search").addEventListener("input", event => { state.query = event.target.value; updateView(); });
     document.getElementById("commonOnly").addEventListener("click", event => { state.commonOnly = !state.commonOnly; event.currentTarget.classList.toggle("active", state.commonOnly); updateView({ fit: true }); });
     document.getElementById("savedOnly").addEventListener("click", event => { state.savedOnly = !state.savedOnly; event.currentTarget.classList.toggle("active", state.savedOnly); updateView({ fit: true }); });
-    document.getElementById("fitButton").addEventListener("click", () => fitVisible());
+    document.getElementById("fitButton").addEventListener("click", () => state.view === "itinerary" ? renderRoutes({ fit: true }) : fitVisible());
     document.getElementById("copyAllButton").addEventListener("click", copyAllPlaces);
     document.getElementById("locateButton").addEventListener("click", () => {
       if (!navigator.geolocation) return alert("이 브라우저에서는 위치를 불러올 수 없어요.");
@@ -695,6 +1018,8 @@
       }, () => alert("위치 권한을 허용하면 현재 위치를 지도에 표시할 수 있어요."), { enableHighAccuracy: true, timeout: 9000 });
     });
 
+    renderPlanControls();
+    renderRoutes({ fit: true });
     updateView();
   </script>
 </body>
