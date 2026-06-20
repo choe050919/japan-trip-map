@@ -65,6 +65,25 @@
     .brand h1 { margin: 0; font-family: Georgia, "Noto Serif KR", serif; font-size: 21px; line-height: 1.1; }
     .brand p { margin: 4px 0 0; color: #c9ddd6; font-size: 12px; }
     .top-stats { display: flex; gap: 8px; }
+    .top-actions { display: flex; align-items: center; gap: 9px; }
+    .copy-all-button {
+      display: flex;
+      height: 42px;
+      align-items: center;
+      gap: 7px;
+      padding: 0 13px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 12px;
+      color: white;
+      background: rgba(255,255,255,.1);
+      font-size: 11px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+    .copy-all-button:hover { background: rgba(255,255,255,.18); transform: translateY(-1px); }
+    .copy-all-button.copied { color: var(--green); border-color: #ffe27a; background: #ffe27a; }
+    .copy-icon { font-size: 16px; line-height: 1; }
     .stat {
       min-width: 76px;
       padding: 8px 12px;
@@ -270,6 +289,12 @@
       .brand p { display: none; }
       .stat { min-width: 58px; padding: 6px 7px; }
       .stat:nth-child(2) { display: none; }
+      .top-actions { gap: 6px; }
+      .copy-all-button { width: 55px; padding: 0; justify-content: center; }
+      .copy-label { display: none; }
+      .copy-all-button::after { content: "복사"; font-size: 10px; }
+      .copy-all-button.copied::after { content: "완료"; }
+      .copy-icon { font-size: 14px; }
       .workspace { display: flex; flex-direction: column; }
       .map-wrap { order: 1; height: 53vh; min-height: 390px; }
       .sidebar { order: 2; min-height: 640px; border: 0; box-shadow: none; }
@@ -289,9 +314,14 @@
           <p>예담 · 정우 · 진서의 가고 싶은 곳을 한 장에</p>
         </div>
       </div>
-      <div class="top-stats" aria-label="여행지 요약">
-        <div class="stat"><b id="visibleCount">43</b><span>보이는 장소</span></div>
-        <div class="stat"><b id="savedCount">0</b><span>일정에 담음</span></div>
+      <div class="top-actions">
+        <button class="copy-all-button" id="copyAllButton" type="button" title="43곳의 모든 정보를 복사">
+          <span class="copy-icon" aria-hidden="true">⧉</span><span class="copy-label">전체 정보 복사</span>
+        </button>
+        <div class="top-stats" aria-label="여행지 요약">
+          <div class="stat"><b id="visibleCount">43</b><span>보이는 장소</span></div>
+          <div class="stat"><b id="savedCount">0</b><span>일정에 담음</span></div>
+        </div>
       </div>
     </header>
 
@@ -465,6 +495,54 @@
       return `https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lng}`;
     }
 
+    function allPlacesText() {
+      const lines = ["우리들의 일본 여행 지도", `총 ${PLACES.length}곳`, ""];
+      [...new Set(PLACES.map(place => place.city))].forEach(city => {
+        lines.push(`■ ${city}`);
+        PLACES.filter(place => place.city === city).forEach((place, index) => {
+          lines.push(`${index + 1}. ${place.name}`);
+          lines.push(`   지역: ${place.area}`);
+          lines.push(`   종류: ${place.category}`);
+          lines.push(`   태그: ${place.people.join(", ")}`);
+          lines.push(`   메모: ${place.note}`);
+          lines.push(`   지도: ${searchUrl(place)}`);
+          lines.push("");
+        });
+      });
+      return lines.join("\n").trim();
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      if (!copied) throw new Error("copy failed");
+    }
+
+    async function copyAllPlaces() {
+      const button = document.getElementById("copyAllButton");
+      const label = button.querySelector(".copy-label");
+      try {
+        const text = allPlacesText();
+        if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+        else fallbackCopy(text);
+        button.classList.add("copied");
+        label.textContent = "43곳 복사 완료";
+        window.setTimeout(() => {
+          button.classList.remove("copied");
+          label.textContent = "전체 정보 복사";
+        }, 1800);
+      } catch (error) {
+        alert("복사하지 못했습니다. 브라우저의 클립보드 권한을 확인해주세요.");
+      }
+    }
+
     function popupHtml(place) {
       const category = CATEGORIES[place.category];
       const common = place.people.length > 1 ? ` · ${place.people.length === 3 ? "모두의 픽" : "겹치는 픽"}` : "";
@@ -606,6 +684,7 @@
     document.getElementById("commonOnly").addEventListener("click", event => { state.commonOnly = !state.commonOnly; event.currentTarget.classList.toggle("active", state.commonOnly); updateView({ fit: true }); });
     document.getElementById("savedOnly").addEventListener("click", event => { state.savedOnly = !state.savedOnly; event.currentTarget.classList.toggle("active", state.savedOnly); updateView({ fit: true }); });
     document.getElementById("fitButton").addEventListener("click", () => fitVisible());
+    document.getElementById("copyAllButton").addEventListener("click", copyAllPlaces);
     document.getElementById("locateButton").addEventListener("click", () => {
       if (!navigator.geolocation) return alert("이 브라우저에서는 위치를 불러올 수 없어요.");
       navigator.geolocation.getCurrentPosition(position => {
