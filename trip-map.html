@@ -109,6 +109,7 @@
     }
     .filters { padding: 17px 18px 12px; border-bottom: 1px solid var(--line); }
     body.itinerary-mode .filters { display: none; }
+    body:not(.itinerary-mode) .itinerary-toolbar { display: none; }
     .search-wrap { position: relative; }
     .search-wrap span { position: absolute; top: 11px; left: 13px; font-size: 16px; }
     #search {
@@ -298,7 +299,7 @@
     .legend {
       position: absolute;
       z-index: 450;
-      right: 14px;
+      left: 14px;
       bottom: 22px;
       padding: 10px 12px;
       border: 1px solid rgba(24,49,43,.1);
@@ -1004,6 +1005,7 @@
         document.getElementById("resultSummary").textContent = `${days.length}일 · 방문 ${mappedCount} · 숙소 ${stayCount}`;
         bindTimelineCards();
       } else {
+        routeLayer.clearLayers();
         visible.forEach(place => markerLayer.addLayer(markers.get(place.name)));
         list.innerHTML = visible.length ? visible.map(placeCard).join("") : `<div class="empty">조건에 맞는 장소가 없어요.<br>필터를 하나 풀어보세요.</div>`;
         document.getElementById("visibleCount").textContent = visible.length;
