@@ -50,6 +50,7 @@ window.TRIP_PLACES = {
     { name:"하카타 음식문화박물관 하쿠하쿠", city:"후쿠오카", area:"하코자키", category:"체험", people:["진서"], lat:33.6132965, lng:130.433319, note:"하카타의 음식과 문화를 보는 박물관", mapUrl:"https://maps.app.goo.gl/WaLfYKNFsKmudh8P8" },
     { name:"하카타 모츠나베 오오야마 본점", city:"후쿠오카", area:"고후쿠마치", category:"맛집", people:["진서"], lat:33.5966724, lng:130.4097118, note:"진서가 고른 모츠나베 본점", mapUrl:"https://maps.app.goo.gl/6AiaR5CvpxWVudL99" },
 
+    { name:"구마모토성", city:"구마모토", area:"주오구", category:"볼거리", people:["진서"], lat:32.8061859, lng:130.7058335, note:"일본 3대 명성 중 하나로 웅장한 석벽이 유명한 성", mapUrl:"https://maps.app.goo.gl/ANMVXhq3kjSGwHnVA" },
     { name:"스이젠지 조주엔", city:"구마모토", area:"스이젠지", category:"산책", people:["진서"], lat:32.7911584, lng:130.7333645, note:"구마모토의 전통 회유식 정원", mapUrl:"https://maps.app.goo.gl/gRGbpoqYxcZRcMDs6" },
     { name:"몽키 D. 루피 동상", city:"구마모토", area:"구마모토현청", category:"볼거리", people:["진서"], lat:32.789011, lng:130.7413031, note:"구마모토현청 앞 원피스 루피 동상", mapUrl:"https://maps.app.goo.gl/5jnVYE46d2wq2hc17" },
     { name:"구마모토시 동식물원", city:"구마모토", area:"에즈코", category:"체험", people:["진서"], lat:32.7745613, lng:130.7476687, note:"동물원과 식물원을 함께 보는 곳", mapUrl:"https://maps.app.goo.gl/4VL2sziobtvDYcLd7" },
