@@ -54,6 +54,8 @@ window.TRIP_PLACES = {
     { name:"스이젠지 조주엔", city:"구마모토", area:"스이젠지", category:"산책", people:["진서"], lat:32.7911584, lng:130.7333645, note:"구마모토의 전통 회유식 정원", mapUrl:"https://maps.app.goo.gl/gRGbpoqYxcZRcMDs6" },
     { name:"몽키 D. 루피 동상", city:"구마모토", area:"구마모토현청", category:"볼거리", people:["진서"], lat:32.789011, lng:130.7413031, note:"구마모토현청 앞 원피스 루피 동상", mapUrl:"https://maps.app.goo.gl/5jnVYE46d2wq2hc17" },
     { name:"구마모토시 동식물원", city:"구마모토", area:"에즈코", category:"체험", people:["진서"], lat:32.7745613, lng:130.7476687, note:"동물원과 식물원을 함께 보는 곳", mapUrl:"https://maps.app.goo.gl/4VL2sziobtvDYcLd7" },
-    { name:"야키토리 데지마", aliases:"やきとり出島", city:"나가사키", area:"데지마", category:"맛집", people:["진서"], lat:32.8175706, lng:129.8451707, note:"진서가 고른 나가사키 야키토리집", mapUrl:"https://maps.app.goo.gl/McWCGiwKjsFE1bJZA" }
+    { name:"쵸파 동상", city:"구마모토", area:"에즈코", category:"볼거리", people:["진서"], lat:32.776109, lng:130.7503989, note:"구마모토 동식물원의 원피스 쵸파 동상", mapUrl:"https://maps.app.goo.gl/8eHHseUFsiiPBxjR7" },
+    { name:"야키토리 데지마", aliases:"やきとり出島", city:"나가사키", area:"데지마", category:"맛집", people:["진서"], lat:32.8175706, lng:129.8451707, note:"진서가 고른 나가사키 야키토리집", mapUrl:"https://maps.app.goo.gl/McWCGiwKjsFE1bJZA" },
+    { name:"분지로 아사히마치점", city:"나가사키", area:"아사히마치", category:"맛집", people:["진서"], lat:32.7495154, lng:129.8646494, note:"진서가 고른 나가사키 돈카츠 맛집", mapUrl:"https://maps.app.goo.gl/DdL2pUPcGHfS2tFH7" }
   ]
 };
