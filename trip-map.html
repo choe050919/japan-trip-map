@@ -97,7 +97,7 @@
     .stat b { display: block; font-size: 16px; }
     .stat span { color: #c9ddd6; font-size: 10px; }
 
-    .workspace { min-height: 0; display: grid; grid-template-columns: 410px 1fr; }
+    .workspace { min-height: 0; display: grid; grid-template-columns: clamp(460px, 30vw, 520px) minmax(0, 1fr); }
     .sidebar {
       z-index: 500;
       min-height: 0;
