@@ -30,7 +30,7 @@ node scripts/add-place.js \
 
 ## Google Sheets 동기화
 
-여러 사람이 장소를 추가할 때는 Google Sheets를 원본으로 두고 GitHub Actions가 `data/places.js`를 자동 생성합니다.
+여러 사람이 장소를 추가할 때는 Google Sheets에 새 후보지를 적고 GitHub Actions가 `data/places.js`에 병합합니다. 기존 `places.js`의 후보지는 유지되고, 시트의 후보지가 기존 `name` 또는 `mapUrl`과 겹치지 않을 때만 뒤에 추가됩니다.
 
 ### 1. 시트 컬럼 만들기
 
@@ -69,9 +69,10 @@ Secret: 게시된 Google Sheets CSV URL
 동작 순서:
 
 ```text
-Google Sheets CSV
+기존 data/places.js
+  + Google Sheets CSV
   -> scripts/sync-places-from-sheet.js
-  -> data/places.js 자동 생성
+  -> data/places.js 병합 생성
   -> GitHub Actions가 변경분 커밋
   -> GitHub Pages에서 trip-map.html이 갱신된 places.js 사용
 ```

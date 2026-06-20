@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const vm = require("vm");
 
 const ROOT = path.resolve(__dirname, "..");
 const PLACES_FILE = path.join(ROOT, "data", "places.js");
@@ -208,25 +209,46 @@ async function rowToPlace(row, index) {
   };
 }
 
-function mergeDuplicates(places) {
-  const merged = [];
-  const byKey = new Map();
+function loadExistingPlaces() {
+  const source = fs.readFileSync(PLACES_FILE, "utf8");
+  const sandbox = { window: {} };
+  vm.createContext(sandbox);
+  vm.runInContext(source, sandbox, { filename: PLACES_FILE });
+  const places = sandbox.window.TRIP_PLACES?.places;
+  if (!Array.isArray(places)) throw new Error("data/places.js에서 places 배열을 읽지 못했습니다.");
+  return places;
+}
 
-  places.forEach(place => {
-    const key = place.name;
-    const existing = byKey.get(key);
-    if (!existing) {
-      byKey.set(key, place);
-      merged.push(place);
+function normalizeUrl(value) {
+  return String(value || "").trim().replace(/\/$/, "");
+}
+
+function isDuplicatePlace(candidate, existingPlaces) {
+  const candidateUrl = normalizeUrl(candidate.mapUrl);
+  return existingPlaces.some(place => {
+    if (place.name === candidate.name) return true;
+    const placeUrl = normalizeUrl(place.mapUrl);
+    return candidateUrl && placeUrl && candidateUrl === placeUrl;
+  });
+}
+
+function mergeSheetPlaces(existingPlaces, sheetPlaces) {
+  const merged = [...existingPlaces];
+  const newPlaces = [];
+  let added = 0;
+  let skipped = 0;
+
+  sheetPlaces.forEach(place => {
+    if (isDuplicatePlace(place, merged)) {
+      skipped += 1;
       return;
     }
-    existing.people = [...new Set([...existing.people, ...place.people])];
-    existing.aliases ||= place.aliases;
-    existing.mapUrl ||= place.mapUrl;
-    existing.note = existing.note === "추가한 후보지" ? place.note : existing.note;
+    merged.push(place);
+    newPlaces.push(place);
+    added += 1;
   });
 
-  return merged;
+  return { places: merged, newPlaces, added, skipped };
 }
 
 function quote(value) {
@@ -252,7 +274,7 @@ function formatPlace(place) {
 function formatPlacesFile(places) {
   return `/*
  * 여행 후보지 데이터 스키마 v1
- * - 새 후보지는 Google Sheets에서 관리하고 GitHub Actions로 동기화합니다.
+ * - 새 후보지는 places 배열 또는 Google Sheets 동기화로 추가합니다.
  * - name은 일정 데이터의 item.placeName과 매칭되므로 고유하게 유지합니다.
  * - 필수값: name, city, area, category, people, lat, lng, note
  * - 선택값: aliases, mapUrl
@@ -286,18 +308,20 @@ async function main() {
 
   const csv = await response.text();
   const rows = rowsToObjects(parseCsv(csv));
-  const places = mergeDuplicates((await Promise.all(rows.map(rowToPlace))).filter(Boolean));
+  const existingPlaces = loadExistingPlaces();
+  const sheetPlaces = (await Promise.all(rows.map(rowToPlace))).filter(Boolean);
+  const { places, newPlaces, added, skipped } = mergeSheetPlaces(existingPlaces, sheetPlaces);
   if (!places.length) throw new Error("생성할 장소가 없습니다.");
 
   const output = formatPlacesFile(places);
   if (args["dry-run"]) {
-    console.log(`검증 완료: ${places.length}곳`);
-    console.log(places.slice(0, 3).map(formatPlace).join("\n"));
+    console.log(`검증 완료: 기존 ${existingPlaces.length}곳, 시트 ${sheetPlaces.length}곳, 추가 ${added}곳, 중복 제외 ${skipped}곳, 최종 ${places.length}곳`);
+    if (newPlaces.length) console.log(newPlaces.slice(0, 3).map(formatPlace).join("\n"));
     return;
   }
 
   fs.writeFileSync(PLACES_FILE, output, "utf8");
-  console.log(`완료: data/places.js (${places.length}곳)`);
+  console.log(`완료: data/places.js (기존 ${existingPlaces.length}곳, 시트 ${sheetPlaces.length}곳, 추가 ${added}곳, 중복 제외 ${skipped}곳, 최종 ${places.length}곳)`);
 }
 
 main().catch(error => {
