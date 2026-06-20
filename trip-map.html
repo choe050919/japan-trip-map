@@ -352,6 +352,18 @@
     }
     .route-popup-time { color: var(--route-color); font-size: 10px; font-weight: 900; }
     .route-note { margin-top: 6px; padding: 7px 8px; border-radius: 8px; color: #536862; background: #f2f5f3; font-size: 9px; line-height: 1.45; }
+    .leaflet-tooltip.route-distance-tooltip {
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--ink);
+      background: rgba(255,253,248,.97);
+      box-shadow: 0 7px 22px rgba(24,49,43,.2);
+      font-family: inherit;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .route-distance-tooltip b { color: var(--green); font-size: 11px; }
     .leaflet-popup-content-wrapper { border-radius: 15px; box-shadow: var(--shadow); }
     .leaflet-popup-content { width: 248px !important; margin: 15px 16px 14px; font-family: inherit; }
     .popup-kicker { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; font-weight: 800; }
@@ -769,20 +781,25 @@
       });
     }
 
+    function formatStraightDistance(meters) {
+      if (meters < 1000) return `${Math.round(meters / 10) * 10} m`;
+      return `${(meters / 1000).toFixed(meters < 10000 ? 1 : 0)} km`;
+    }
+
     function renderRoutes({ fit = false } = {}) {
       routeLayer.clearLayers();
       routeMarkers.clear();
       const allCoordinates = [];
 
       selectedDays().forEach(day => {
-        const dayCoordinates = [];
+        const dayStops = [];
         let routeNumber = 0;
         day.items.forEach(item => {
           const resolved = resolveItineraryItem(item);
           if (!Number.isFinite(resolved.lat) || !Number.isFinite(resolved.lng)) return;
           routeNumber += 1;
           const latlng = [resolved.lat, resolved.lng];
-          dayCoordinates.push(latlng);
+          dayStops.push({ latlng, number: routeNumber, title: item.title });
           allCoordinates.push(latlng);
           const icon = L.divIcon({
             className: "route-div-icon",
@@ -797,15 +814,33 @@
           routeLayer.addLayer(marker);
           routeMarkers.set(item.id, marker);
         });
-        if (dayCoordinates.length > 1) {
-          routeLayer.addLayer(L.polyline(dayCoordinates, {
+
+        for (let index = 1; index < dayStops.length; index += 1) {
+          const from = dayStops[index - 1];
+          const to = dayStops[index];
+          const distance = map.distance(from.latlng, to.latlng);
+          const visibleSegment = L.polyline([from.latlng, to.latlng], {
             color: day.color,
             weight: 4,
             opacity: .82,
             dashArray: "9 9",
             lineCap: "round",
-            lineJoin: "round"
-          }).bindTooltip(`${day.dayNumber}일차 이동 순서 안내선 · 실제 도로 경로 아님`, { sticky: true }));
+            lineJoin: "round",
+            interactive: false
+          });
+          const hitSegment = L.polyline([from.latlng, to.latlng], {
+            color: day.color,
+            weight: 18,
+            opacity: .001,
+            lineCap: "round"
+          }).bindTooltip(
+            `<strong>${from.number} → ${to.number}</strong><br>${escapeHtml(from.title)} → ${escapeHtml(to.title)}<br><b>직선거리 ${formatStraightDistance(distance)}</b>`,
+            { sticky: true, direction: "top", className: "route-distance-tooltip", opacity: 1 }
+          );
+          hitSegment.on("mouseover", () => visibleSegment.setStyle({ weight: 7, opacity: 1 }));
+          hitSegment.on("mouseout", () => visibleSegment.setStyle({ weight: 4, opacity: .82 }));
+          routeLayer.addLayer(visibleSegment);
+          routeLayer.addLayer(hitSegment);
         }
       });
 
