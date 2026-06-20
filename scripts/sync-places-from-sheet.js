@@ -134,9 +134,16 @@ function parseMapsUrl(rawUrl) {
   return { name, coordinates };
 }
 
-async function resolveShortUrl(rawUrl) {
+async function resolveShortUrl(rawUrl, rowNumber) {
   if (!rawUrl) return rawUrl;
-  const host = new URL(rawUrl).hostname;
+  let url;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    throw new Error(`${rowNumber}행: googleMapUrl이 올바른 URL이 아닙니다: ${rawUrl.slice(0, 80)}`);
+  }
+
+  const host = url.hostname;
   if (!/(^|\.)maps\.app\.goo\.gl$|(^|\.)goo\.gl$/.test(host)) return rawUrl;
 
   const response = await fetch(rawUrl, { method: "GET", redirect: "follow" });
@@ -175,7 +182,7 @@ async function rowToPlace(row, index) {
   if (!truthyEnabled(row.enabled)) return null;
 
   const mapUrl = row.googlemapurl || row.mapurl || row.url || "";
-  const finalUrl = mapUrl ? await resolveShortUrl(mapUrl) : "";
+  const finalUrl = mapUrl ? await resolveShortUrl(mapUrl, rowNumber) : "";
   const parsed = parseMapsUrl(finalUrl || mapUrl);
   const explicitLat = parseNumber(row.lat);
   const explicitLng = parseNumber(row.lng);
@@ -269,7 +276,12 @@ async function main() {
   const csvUrl = args.url || process.env.GOOGLE_SHEET_CSV_URL;
   if (!csvUrl) throw new Error("GOOGLE_SHEET_CSV_URL 환경변수 또는 --url 값이 필요합니다.");
 
-  const response = await fetch(csvUrl);
+  let response;
+  try {
+    response = await fetch(csvUrl);
+  } catch {
+    throw new Error(`GOOGLE_SHEET_CSV_URL이 올바른 URL이 아닙니다: ${csvUrl.slice(0, 80)}`);
+  }
   if (!response.ok) throw new Error(`시트를 읽지 못했습니다: ${response.status} ${response.statusText}`);
 
   const csv = await response.text();
