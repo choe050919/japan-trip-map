@@ -1,7 +1,6 @@
 /*
  * 여행 후보지 데이터 스키마 v1
- * - 새 후보지는 places 배열에 추가합니다.
- * - 새 후보지는 Google Sheets에서 관리하고 GitHub Actions로 동기화합니다.
+ * - 새 후보지는 places 배열 또는 Google Sheets 동기화로 추가합니다.
  * - name은 일정 데이터의 item.placeName과 매칭되므로 고유하게 유지합니다.
  * - 필수값: name, city, area, category, people, lat, lng, note
  * - 선택값: aliases, mapUrl
@@ -54,6 +53,7 @@ window.TRIP_PLACES = {
     { name:"구마모토시 동식물원", city:"구마모토", area:"에즈코", category:"체험", people:["진서"], lat:32.7745613, lng:130.7476687, note:"동물원과 식물원을 함께 보는 곳", mapUrl:"https://maps.app.goo.gl/4VL2sziobtvDYcLd7" },
     { name:"쵸파 동상", city:"구마모토", area:"에즈코", category:"볼거리", people:["진서"], lat:32.776109, lng:130.7503989, note:"구마모토 동식물원의 원피스 쵸파 동상", mapUrl:"https://maps.app.goo.gl/8eHHseUFsiiPBxjR7" },
     { name:"야키토리 데지마", aliases:"やきとり出島", city:"나가사키", area:"데지마", category:"맛집", people:["진서"], lat:32.8175706, lng:129.8451707, note:"진서가 고른 나가사키 야키토리집", mapUrl:"https://maps.app.goo.gl/McWCGiwKjsFE1bJZA" },
-    { name:"분지로 아사히마치점", city:"나가사키", area:"아사히마치", category:"맛집", people:["진서"], lat:32.7495154, lng:129.8646494, note:"진서가 고른 나가사키 돈카츠 맛집", mapUrl:"https://maps.app.goo.gl/DdL2pUPcGHfS2tFH7" }
+    { name:"분지로 아사히마치점", city:"나가사키", area:"아사히마치", category:"맛집", people:["진서"], lat:32.7495154, lng:129.8646494, note:"진서가 고른 나가사키 돈카츠 맛집", mapUrl:"https://maps.app.goo.gl/DdL2pUPcGHfS2tFH7" },
+    { name:"후쿠오카 시 박물관", city:"후쿠오카", area:"미분류", category:"볼거리", people:["현승"], lat:33.589786, lng:130.353064, note:"박물관, 테스트용", mapUrl:"https://maps.app.goo.gl/GmyYFiSafahugpwk8" }
   ]
 };
