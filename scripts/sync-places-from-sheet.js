@@ -173,6 +173,16 @@ function parseNumber(value) {
   return Number.isFinite(number) ? number : null;
 }
 
+function isValidUrl(value) {
+  if (!value) return false;
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function truthyEnabled(value) {
   const normalized = String(value || "").trim().toLowerCase();
   return !["false", "no", "n", "0", "비활성", "숨김"].includes(normalized);
@@ -183,17 +193,26 @@ async function rowToPlace(row, index) {
   if (!truthyEnabled(row.enabled)) return null;
 
   const mapUrl = row.googlemapurl || row.mapurl || row.url || "";
-  const finalUrl = mapUrl ? await resolveShortUrl(mapUrl, rowNumber) : "";
-  const parsed = parseMapsUrl(finalUrl || mapUrl);
   const explicitLat = parseNumber(row.lat);
   const explicitLng = parseNumber(row.lng);
+  const finalUrl = mapUrl && isValidUrl(mapUrl) ? await resolveShortUrl(mapUrl, rowNumber) : "";
+  const parsed = parseMapsUrl(finalUrl || mapUrl);
   const coordinates = explicitLat != null && explicitLng != null
     ? { lat: explicitLat, lng: explicitLng }
     : parsed.coordinates;
 
   const name = row.name || parsed.name;
-  if (!name) throw new Error(`${rowNumber}행: name 값이 필요합니다.`);
-  if (!coordinates) throw new Error(`${rowNumber}행 (${name}): lat/lng 또는 좌표가 포함된 googleMapUrl이 필요합니다.`);
+  if (!name) {
+    console.warn(`${rowNumber}행 건너뜀: name 값이 필요합니다.`);
+    return null;
+  }
+  if (!coordinates) {
+    console.warn(`${rowNumber}행 건너뜀 (${name}): lat/lng 또는 좌표가 포함된 googleMapUrl이 필요합니다.`);
+    return null;
+  }
+  if (mapUrl && !isValidUrl(mapUrl)) {
+    console.warn(`${rowNumber}행 경고 (${name}): googleMapUrl이 URL이 아니어서 mapUrl 저장을 생략합니다: ${mapUrl.slice(0, 80)}`);
+  }
 
   return {
     name,
@@ -205,7 +224,7 @@ async function rowToPlace(row, index) {
     lat: Number(coordinates.lat.toFixed(7)),
     lng: Number(coordinates.lng.toFixed(7)),
     note: row.note || "추가한 후보지",
-    mapUrl: mapUrl || undefined
+    mapUrl: isValidUrl(mapUrl) ? mapUrl : undefined
   };
 }
 

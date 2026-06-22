@@ -47,9 +47,11 @@ name | googleMapUrl | city | area | category | people | note | lat | lng | alias
 - `category`: `볼거리`, `산책`, `쇼핑`, `맛집`, `카페`, `체험` 중 하나
 - `people`: `예담`, `정우`, `진서`, `현승`, `두림` 중 쉼표로 입력
 - `note`: 지도 카드와 복사 텍스트에 표시할 메모
-- `lat`, `lng`: 좌표. 구글맵 URL에서 좌표 추출이 안 될 때 필수입니다.
+- `lat`, `lng`: 좌표. 구글맵 URL에서 좌표 추출이 안 될 때 필수입니다. 좌표를 알 수 없는 행은 동기화에서 건너뜁니다.
 - `aliases`: 검색용 별칭. 선택값입니다.
 - `enabled`: `false`, `no`, `0`, `숨김`이면 동기화에서 제외합니다.
+
+`googleMapUrl`에는 주소 텍스트가 아니라 `https://...`로 시작하는 구글맵 URL을 넣어야 합니다. 주소만 알고 있다면 `googleMapUrl`은 비워두고 `lat`, `lng`를 직접 넣습니다.
 
 ### 2. CSV URL 만들기
 
