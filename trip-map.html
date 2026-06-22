@@ -618,6 +618,7 @@
 
     const markerLayer = L.layerGroup().addTo(map);
     const routeLayer = L.layerGroup().addTo(map);
+    const stayLayer = L.layerGroup().addTo(map);
     const markers = new Map();
     const routeMarkers = new Map();
     const stayMarkers = new Map();
@@ -953,10 +954,29 @@
       return `${(meters / 1000).toFixed(meters < 10000 ? 1 : 0)} km`;
     }
 
+    function renderStays() {
+      stayLayer.clearLayers();
+      stayMarkers.clear();
+      visibleAccommodations().forEach(stay => {
+        const latlng = [stay.lat, stay.lng];
+        const icon = L.divIcon({
+          className: "stay-div-icon",
+          html: `<div class="stay-pin">🛏</div>`,
+          iconSize: [36, 36],
+          iconAnchor: [18, 18],
+          popupAnchor: [0, -15]
+        });
+        const marker = L.marker(latlng, { icon, title: `숙소 · ${stay.name}`, zIndexOffset: 1400 })
+          .bindPopup(accommodationPopup(stay));
+        marker.on("click", () => setActiveStay(stay.id));
+        stayLayer.addLayer(marker);
+        stayMarkers.set(stay.id, marker);
+      });
+    }
+
     function renderRoutes({ fit = false } = {}) {
       routeLayer.clearLayers();
       routeMarkers.clear();
-      stayMarkers.clear();
       const allCoordinates = [];
 
       selectedDays().forEach(day => {
@@ -1012,22 +1032,8 @@
         }
       });
 
-      visibleAccommodations().forEach(stay => {
-        const latlng = [stay.lat, stay.lng];
-        allCoordinates.push(latlng);
-        const icon = L.divIcon({
-          className: "stay-div-icon",
-          html: `<div class="stay-pin">🛏</div>`,
-          iconSize: [36, 36],
-          iconAnchor: [18, 18],
-          popupAnchor: [0, -15]
-        });
-        const marker = L.marker(latlng, { icon, title: `숙소 · ${stay.name}`, zIndexOffset: 1400 })
-          .bindPopup(accommodationPopup(stay));
-        marker.on("click", () => setActiveStay(stay.id));
-        routeLayer.addLayer(marker);
-        stayMarkers.set(stay.id, marker);
-      });
+      renderStays();
+      visibleAccommodations().forEach(stay => allCoordinates.push([stay.lat, stay.lng]));
 
       if (fit && allCoordinates.length) {
         if (allCoordinates.length === 1) map.flyTo(allCoordinates[0], 15, { duration: .8 });
@@ -1131,6 +1137,7 @@
         bindTimelineCards();
       } else {
         routeLayer.clearLayers();
+        renderStays();
         visible.forEach(place => markerLayer.addLayer(markers.get(place.name)));
         list.innerHTML = visible.length ? visible.map(placeCard).join("") : `<div class="empty">조건에 맞는 장소가 없어요.<br>필터를 하나 풀어보세요.</div>`;
         document.getElementById("visibleCount").textContent = visible.length;
@@ -1141,17 +1148,21 @@
 
       if (fit) {
         if (state.view === "itinerary") renderRoutes({ fit: true });
-        else if (visible.length) fitVisible(visible);
+        else fitVisible(visible);
       }
     }
 
     function fitVisible(places = filteredPlaces()) {
-      if (!places.length) return;
-      if (places.length === 1) {
-        map.flyTo([places[0].lat, places[0].lng], 16, { duration: .8 });
+      const coordinates = [
+        ...places.map(place => [place.lat, place.lng]),
+        ...visibleAccommodations().map(stay => [stay.lat, stay.lng])
+      ];
+      if (!coordinates.length) return;
+      if (coordinates.length === 1) {
+        map.flyTo(coordinates[0], 16, { duration: .8 });
         return;
       }
-      const bounds = L.latLngBounds(places.map(place => [place.lat, place.lng]));
+      const bounds = L.latLngBounds(coordinates);
       map.fitBounds(bounds, { padding: [45, 45], maxZoom: 14 });
     }
 
