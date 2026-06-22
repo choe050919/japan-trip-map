@@ -59,6 +59,14 @@ window.TRIP_PLACES = {
     { name:"사쿠라미치", city:"구마모토", area:"미분류", category:"볼거리", people:["예담"], lat:32.8008402, lng:130.7028645, note:"중심지 ,복합 상업 시설,쇼핑", mapUrl:"https://maps.app.goo.gl/YR1eJ8z2MUFAA3fk8" },
     { name:"토리쵸스지역", city:"구마모토", area:"미분류", category:"산책", people:["예담"], lat:32.8033222, lng:130.7097714, note:"주변 아케이드 상가 활성화, 둘러보기 좋음(낯,밤 모두)", mapUrl:"https://maps.app.goo.gl/ihADpw3gLF2UgZTz7" },
     { name:"욧소", city:"나가사키", area:"미분류", category:"맛집", people:["진서"], lat:32.7445064, lng:129.8787748, note:"차완무시로 유명", mapUrl:"https://maps.app.goo.gl/JzQ4MzUJ5m42YGkq7" },
-    { name:"고로케", city:"나가사키", area:"미분류", category:"맛집", people:["진서"], lat:32.7458356, lng:129.8801197, note:"고로케로 유명", mapUrl:"https://maps.app.goo.gl/zC6491Khnm55u6pV6" }
+    { name:"고로케", city:"나가사키", area:"미분류", category:"맛집", people:["진서"], lat:32.7458356, lng:129.8801197, note:"고로케로 유명", mapUrl:"https://maps.app.goo.gl/zC6491Khnm55u6pV6" },
+    { name:"글로버 정원", city:"나가사키", area:"미분류", category:"산책", people:["현승"], lat:32.7343314, lng:129.8691886, note:"나가사키 특유의 “서양식 항구도시” 분위기를 가장 잘 느낄 수 있는 구역이야. 글로버 정원은 메이지 시기 서양식 건축물과 항구 전망이 함께 있는 대표 관광지야.", mapUrl:"https://maps.app.goo.gl/xeYYTLFbZE2xKRW36" },
+    { name:"오우라 성당", city:"나가사키", area:"미분류", category:"볼거리", people:["현승"], lat:32.7341535, lng:129.8701372, note:"글로버 정원 바로 옆의 좋은 볼거리", mapUrl:"https://maps.app.goo.gl/1F1STCEuGbEewKF9A" },
+    { name:"데지마", city:"나가사키", area:"미분류", category:"볼거리", people:["현승"], lat:32.7434736, lng:129.8730141, note:"에도 시대 일본이 네덜란드와 교류하던 인공섬을 복원한 곳이야. 규모가 아주 크진 않지만, 나가사키가 왜 일본의 대외 교류 창구였는지 이해하기 좋고 중심지와도 가까워. 시간이 많지 않아도 넣기 좋은 코스.", mapUrl:"https://maps.app.goo.gl/4SPdAw1rZgFVMtec7" },
+    { name:"이나사야마 전망대", city:"나가사키", area:"미분류", category:"볼거리", people:["현승","진서"], lat:32.7584755, lng:129.8456878, note:"나가사키 야경의 대표 명소야. 해발 333m의 이나사야마 정상에서 나가사키 항구와 산비탈 도시 풍경을 한눈에 볼 수 있어. 공식 관광 정보에서도 360도 전망과 맑은 날 운젠·아마쿠사·고토열도까지 보이는 전망을 소개하고 있어.", mapUrl:"https://maps.app.goo.gl/QtSu2zjZ1Sdyssaw9" },
+    { name:"신치 차이나타운", city:"나가사키", area:"미분류", category:"맛집", people:["현승"], lat:32.7414587, lng:129.8752789, note:"식사 겸 가볍게 들르기 좋아. 나가사키 짬뽕이나 사라우동을 먹기 좋은 구역이고, 데지마·하마노마치 쪽과도 가깝다.", mapUrl:"https://maps.app.goo.gl/PAsv436mCFTG3iZY9" },
+    { name:"사쿠라노바바 조사이엔", city:"구마모토", area:"미분류", category:"맛집", people:["현승","진서"], lat:32.8036711, lng:130.7037558, note:"구마모토성 바로 옆에 있는 먹거리·기념품 거리야. 성을 본 뒤 점심이나 간식 먹기 좋고, 구마모토 특산품을 한 번에 보기 편해. 구마모토성 코스에 거의 필수로 붙이면 된다.", mapUrl:"https://maps.app.goo.gl/mARtgJAprxYUpuCD7" },
+    { name:"가미토리 아케이드", city:"구마모토", area:"미분류", category:"쇼핑", people:["현승"], lat:32.8044078, lng:130.7108414, note:"구마모토 중심 번화가야. 관광지라기보다는 식사, 카페, 쇼핑, 저녁 산책용으로 좋다. 숙소가 이 근처면 이동이 정말 편하고, 비 오는 날에도 아케이드라 돌아다니기 좋아.", mapUrl:"https://maps.app.goo.gl/pA3wKikHC7tbwb487" },
+    { name:"mirakuen", city:"나가사키", area:"미분류", category:"맛집", people:["정우"], lat:32.7368095, lng:129.8710975, note:"나가사키 짬뽕 맛집 나가사키에서 머물 호텔이랑 거리도 5분 정도라서 가보면 좋을듯?", mapUrl:"https://maps.app.goo.gl/XdB8Jx8BMFvyBjzCA" }
   ]
 };
