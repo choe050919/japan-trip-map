@@ -54,6 +54,11 @@ window.TRIP_PLACES = {
     { name:"쵸파 동상", city:"구마모토", area:"에즈코", category:"볼거리", people:["진서"], lat:32.776109, lng:130.7503989, note:"구마모토 동식물원의 원피스 쵸파 동상", mapUrl:"https://maps.app.goo.gl/8eHHseUFsiiPBxjR7" },
     { name:"야키토리 데지마", aliases:"やきとり出島", city:"나가사키", area:"데지마", category:"맛집", people:["진서"], lat:32.8175706, lng:129.8451707, note:"진서가 고른 나가사키 야키토리집", mapUrl:"https://maps.app.goo.gl/McWCGiwKjsFE1bJZA" },
     { name:"분지로 아사히마치점", city:"나가사키", area:"아사히마치", category:"맛집", people:["진서"], lat:32.7495154, lng:129.8646494, note:"진서가 고른 나가사키 돈카츠 맛집", mapUrl:"https://maps.app.goo.gl/DdL2pUPcGHfS2tFH7" },
-    { name:"후쿠오카 시 박물관", city:"후쿠오카", area:"미분류", category:"볼거리", people:["현승"], lat:33.589786, lng:130.353064, note:"박물관, 테스트용", mapUrl:"https://maps.app.goo.gl/GmyYFiSafahugpwk8" }
+    { name:"후쿠오카 시 박물관", city:"후쿠오카", area:"미분류", category:"볼거리", people:["현승"], lat:33.589786, lng:130.353064, note:"박물관, 테스트용", mapUrl:"https://maps.app.goo.gl/GmyYFiSafahugpwk8" },
+    { name:"평화공원", city:"나가사키", area:"미분류", category:"산책", people:["현승"], lat:32.7763968, lng:129.8636495, note:"티배깅 해주기, 평화공원 + 원폭자료관 + 원폭낙하중심지\n나가사키를 처음 간다면 가장 먼저 추천해. 분위기는 무겁지만, 도시의 역사적 의미를 이해하는 핵심 코스야. 노면전차로 접근 가능하고, 세 곳이 서로 가까워서 묶어서 보기 좋다.", mapUrl:"https://www.google.com/maps/place/%ED%8F%89%ED%99%94%EA%B3%B5%EC%9B%90/@32.7763968,129.8636495,17z/data=!3m1!4b1!4m6!3m5!1s0x356aacda6d1aa7e1:0xa49cbcaa4cb67b36!8m2!3d32.7763968!4d129.8636495!16zL20vMGJ4MWo4!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D" },
+    { name:"사쿠라미치", city:"구마모토", area:"미분류", category:"볼거리", people:["예담"], lat:32.8008402, lng:130.7028645, note:"중심지 ,복합 상업 시설,쇼핑", mapUrl:"https://maps.app.goo.gl/YR1eJ8z2MUFAA3fk8" },
+    { name:"토리쵸스지역", city:"구마모토", area:"미분류", category:"산책", people:["예담"], lat:32.8033222, lng:130.7097714, note:"주변 아케이드 상가 활성화, 둘러보기 좋음(낯,밤 모두)", mapUrl:"https://maps.app.goo.gl/ihADpw3gLF2UgZTz7" },
+    { name:"욧소", city:"나가사키", area:"미분류", category:"맛집", people:["진서"], lat:32.7445064, lng:129.8787748, note:"차완무시로 유명", mapUrl:"https://maps.app.goo.gl/JzQ4MzUJ5m42YGkq7" },
+    { name:"고로케", city:"나가사키", area:"미분류", category:"맛집", people:["진서"], lat:32.7458356, lng:129.8801197, note:"고로케로 유명", mapUrl:"https://maps.app.goo.gl/zC6491Khnm55u6pV6" }
   ]
 };
